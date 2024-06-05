@@ -33,8 +33,11 @@ public class Main {
       String line = reader.readLine();
       //Testing
       System.out.println(line);
+      String[] HttpRequest = line.split(" ", 0);
 
-
+      for (int i = 0; i < HttpRequest.length; i++) {
+        System.out.print(HttpRequest[i]);
+      }
 
     } catch (IOException e) {
       System.out.println("IOException: " + e.getMessage());
