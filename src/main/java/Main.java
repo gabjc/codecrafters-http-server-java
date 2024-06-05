@@ -32,10 +32,9 @@ public class Main {
       // Reads text from character input stream
       BufferedReader reader = new BufferedReader(new InputStreamReader(input)); 
       String line = reader.readLine();
-      String header = reader.readLine();
+
       //Testing line output
       System.out.println(line);
-      System.out.println(header);
 
       // Splitting the line based on spaces
       String[] HttpRequest = line.split(" ", 0);
@@ -56,7 +55,13 @@ public class Main {
         String message = HttpRequest[1].substring(6);
         String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", message.length(), message);
         output.write(str.getBytes());
-      }  else {
+      } else if (HttpRequest[1].startsWith("/user-agent")) {
+        reader.readLine();
+        String userAgent = reader.readLine();
+        String body = userAgent.substring(12);
+        String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", body.length(), body);
+        output.write(str.getBytes());
+      } else {
         output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
       }
 
