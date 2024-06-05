@@ -9,7 +9,7 @@ import java.net.Socket;
 public class Main {
   public static void main(String[] args) {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
-    System.out.println("Logs from your program will appear here!");
+    // System.out.println("Logs from your program will appear here!");
 
     // Uncomment this block to pass the first stage
     
@@ -33,14 +33,23 @@ public class Main {
       BufferedReader reader = new BufferedReader(new InputStreamReader(input)); 
       String line = reader.readLine();
       //Testing
-      // System.out.println(line);
+      System.out.println(line);
+
+
       String[] HttpRequest = line.split(" ", 0);
-      
-      for (int i = 0; i < HttpRequest.length; i++) {
-        System.out.print(HttpRequest);
+      for (String arr : HttpRequest) {
+        System.out.println(arr);
       }
-      
+
+
       OutputStream output = clientSocket.getOutputStream();
+
+      if (HttpRequest[1].equals("/")) {
+        output.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+      }
+      else {
+        output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
+      }
 
 
     } catch (IOException e) {
