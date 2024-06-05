@@ -32,22 +32,27 @@ public class Main {
       // Reads text from character input stream
       BufferedReader reader = new BufferedReader(new InputStreamReader(input)); 
       String line = reader.readLine();
-      //Testing
+      //Testing line output
       System.out.println(line);
 
-
+      // Splitting the line based on spaces
       String[] HttpRequest = line.split(" ", 0);
+      // Testing HttpRequest outputs
       for (String arr : HttpRequest) {
         System.out.println(arr);
       }
 
-
+      // Initialized for the write function
       OutputStream output = clientSocket.getOutputStream();
-
+      
       if (HttpRequest[1].equals("/")) {
         output.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
-      }
-      else {
+      } else if (HttpRequest[1].startsWith("/echo/")) {
+        // Get the rest of the string after "/echo/"
+        String message = HttpRequest[1].substring(6);
+        String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", message.length(), message);
+        output.write(str.getBytes());
+      }  else {
         output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
       }
 
