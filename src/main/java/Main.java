@@ -32,11 +32,15 @@ public class Main {
       // Reads text from character input stream
       BufferedReader reader = new BufferedReader(new InputStreamReader(input)); 
       String line = reader.readLine();
+      String header = reader.readLine();
       //Testing line output
       System.out.println(line);
+      System.out.println(header);
 
       // Splitting the line based on spaces
       String[] HttpRequest = line.split(" ", 0);
+
+
       // Testing HttpRequest outputs
       for (String arr : HttpRequest) {
         System.out.println(arr);
