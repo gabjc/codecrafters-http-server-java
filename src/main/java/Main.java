@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -32,12 +33,15 @@ public class Main {
       BufferedReader reader = new BufferedReader(new InputStreamReader(input)); 
       String line = reader.readLine();
       //Testing
-      System.out.println(line);
+      // System.out.println(line);
       String[] HttpRequest = line.split(" ", 0);
-
+      
       for (int i = 0; i < HttpRequest.length; i++) {
-        System.out.print(HttpRequest[i]);
+        System.out.print(HttpRequest);
       }
+      
+      OutputStream output = clientSocket.getOutputStream();
+
 
     } catch (IOException e) {
       System.out.println("IOException: " + e.getMessage());
