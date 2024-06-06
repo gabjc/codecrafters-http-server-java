@@ -104,6 +104,9 @@ public class Main {
           File file = new File(directory + fileName);
           if (file.createNewFile()) {
             FileWriter writer = new FileWriter(file);
+            reader.readLine();
+            reader.readLine();
+            reader.readLine();
             String body = reader.readLine();
             System.out.println("Body: " + body);
   
@@ -115,9 +118,6 @@ public class Main {
           }
 
         }
-
-
-
     }
 
     } catch (IOException e) {
