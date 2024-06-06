@@ -58,59 +58,66 @@ public class Main {
 
         // Initialized for the write function
         OutputStream output = clientSocket.getOutputStream();
-        
-        if (HttpRequest[1].equals("/")) {
-          output.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
-        } 
-        // IMPLEMENTING ENDPOINT AND RESPONDING WITH STRING
-        else if (HttpRequest[1].startsWith("/echo/")) {
-          // Get the rest of the string after "/echo/"
-          String message = HttpRequest[1].substring(6);
-          String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", message.length(), message);
-          output.write(str.getBytes());
-        } 
-        // READING THE USER-AGENT HEADER
-        else if (HttpRequest[1].startsWith("/user-agent")) {
-          // Skip the Host header
-          reader.readLine();
-          // Get the User-Agent header
-          String userAgent = reader.readLine();
-          String body = userAgent.substring(12);
-          String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", body.length(), body);
-          output.write(str.getBytes());
-        } 
-        // RETURNING A FILE
-        else if (HttpRequest[1].startsWith("/files")) {
-          // Get the file and read from the file
-          String fileName = HttpRequest[1].substring(7);
-          File file = new File(directory, fileName);
-          
-          // If it exists, read from it
-          if (file.exists()){
-            String body = Files.readString(file.toPath());
-            String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: %d\r\n\r\n%s", body.length(), body);
+
+        if (HttpRequest[0].equals("GET")) {
+          if (HttpRequest[1].equals("/")) {
+            output.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+          } 
+          // IMPLEMENTING ENDPOINT AND RESPONDING WITH STRING
+          else if (HttpRequest[1].startsWith("/echo/")) {
+            // Get the rest of the string after "/echo/"
+            String message = HttpRequest[1].substring(6);
+            String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", message.length(), message);
             output.write(str.getBytes());
-          } else {
-              output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
+          } 
+          // READING THE USER-AGENT HEADER
+          else if (HttpRequest[1].startsWith("/user-agent")) {
+            // Skip the Host header
+            reader.readLine();
+            // Get the User-Agent header
+            String userAgent = reader.readLine();
+            String body = userAgent.substring(12);
+            String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", body.length(), body);
+            output.write(str.getBytes());
+          } 
+          // RETURNING A FILE
+          else if (HttpRequest[1].startsWith("/files")) {
+            // Get the file and read from the file
+            String fileName = HttpRequest[1].substring(7);
+            File file = new File(directory, fileName);
+            
+            // If it exists, read from it
+            if (file.exists()){
+              String body = Files.readString(file.toPath());
+              String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: %d\r\n\r\n%s", body.length(), body);
+              output.write(str.getBytes());
+            } else {
+                output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
+            }
+          } 
+          else {
+            output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
           }
-        } 
-        // POST A FILE
-        else if (HttpRequest[0].startsWith("POST")) {
+        } else if (HttpRequest[0].equals("POST")) {
+          // POST A FILE
           String fileName = HttpRequest[1].substring(7);
-          FileWriter file = new FileWriter(fileName);
+          File file = new File(directory + fileName);
+          if (file.createNewFile()) {
+            FileWriter writer = new FileWriter(file);
+            String body = reader.readLine();
+            System.out.println("Body: " + body);
+  
+            writer.write(body);
+            writer.close();
+            output.write("HTTP/1.1 201 Created\r\n\r\n".getBytes());
+          } else {
+            output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
+          }
 
-          String body = reader.readLine();
-          System.out.println("Body: " + body);
-
-          file.write(body);
-          file.close();
-
-          String str = String.format("HTTP/1.1 201 Created");
-          output.write(str.getBytes());
         }
-        else {
-          output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
-        }
+
+
+
     }
 
     } catch (IOException e) {
