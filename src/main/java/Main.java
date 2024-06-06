@@ -95,8 +95,7 @@ public class Main {
           }
         } 
         // POST A FILE
-        else if (HttpRequest[0].equals("POST") && HttpRequest[1].startsWith("/files")) {
-
+        else if (HttpRequest[0].equals("POST")) {
           String fileName = HttpRequest[1].substring(7);
           FileWriter file = new FileWriter(fileName);
 
