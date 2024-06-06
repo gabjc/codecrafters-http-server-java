@@ -78,12 +78,7 @@ public class Main {
           // If it exists, read from it
           if (file.exists()){
             String body = Files.readString(file.toPath());
-            String str = String.format("HTTP/1.1 200 OK\\r\\n" + //
-                            "Content-Type: application/octet-stream\\r\\n" + //
-                            "Content-Length: %d\\r\\n" + //
-                            "\\r\\n" + //
-                            "%s\r\n" + //
-                            "", body.length(), body);
+            String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: %d\r\n\r\n%s", body.length(), body);
             output.write(str.getBytes());
           } else {
               output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
@@ -98,3 +93,5 @@ public class Main {
     }    
   }
 }
+
+
