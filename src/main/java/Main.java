@@ -49,6 +49,7 @@ public class Main {
         // Splitting the line based on spaces
         String[] HttpRequest = line.split(" ", 0);
 
+        System.out.println("FIRST: " + HttpRequest[0]);
 
         // Testing HttpRequest outputs
         for (String arr : HttpRequest) {
@@ -95,7 +96,7 @@ public class Main {
         } 
         // POST A FILE
         else if (HttpRequest[0].equals("POST") && HttpRequest[1].startsWith("/files")) {
-          
+
           String fileName = HttpRequest[1].substring(7);
           FileWriter file = new FileWriter(fileName);
 
