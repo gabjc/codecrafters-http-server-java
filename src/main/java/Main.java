@@ -41,16 +41,16 @@ public class Main {
         String line = reader.readLine();
 
         //Testing line output
-        // System.out.println(line);
+        System.out.println(line);
 
         // Splitting the line based on spaces
         String[] HttpRequest = line.split(" ", 0);
 
 
         // Testing HttpRequest outputs
-        // for (String arr : HttpRequest) {
-        //   System.out.println(arr);
-        // }
+        for (String arr : HttpRequest) {
+          System.out.println(arr);
+        }
 
         // Initialized for the write function
         OutputStream output = clientSocket.getOutputStream();
@@ -70,7 +70,7 @@ public class Main {
           String body = userAgent.substring(12);
           String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", body.length(), body);
           output.write(str.getBytes());
-        } else if (HttpRequest[1].startsWith("/files/")) {
+        } else if (HttpRequest[1].startsWith("/files")) {
           // Get the file and read from the file
           String fileName = HttpRequest[1].substring(7);
           File file = new File(directory, fileName);
