@@ -103,12 +103,8 @@ public class Main {
           } 
           // READING THE USER-AGENT HEADER
           else if (reqTarget.startsWith("/user-agent")) {
-            // Skip the Host header
-            reader.readLine();
-            // Get the User-Agent header
-            String userAgent = reader.readLine();
-            String bodyAgent = userAgent.substring(12);
-            String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d \r\n\r\n %s", bodyAgent.length(), bodyAgent);
+
+            String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d \r\n\r\n %s", headers.get("User-Agent").length(), headers.get("User-Agent"));
             output.write(str.getBytes());
           } 
           // RETURNING A FILE
@@ -142,6 +138,10 @@ public class Main {
           } else {
             output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
           }
+
+            output.flush();
+            output.close();
+
         }
     }
 
