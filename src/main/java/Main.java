@@ -98,16 +98,21 @@ public class Main {
           else {
             output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
           }
+
         } else if (HttpRequest[0].equals("POST")) {
           // POST A FILE
           String fileName = HttpRequest[1].substring(7);
           File file = new File(directory + fileName);
           if (file.createNewFile()) {
+            // Read the body of the request
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input));
+            StringBuilder bodyBuffer = new StringBuilder();
+            while (bufferedReader.ready()) {
+              bodyBuffer.append((char)bufferedReader.read());
+            }
+            String body = bodyBuffer.toString();
+
             FileWriter writer = new FileWriter(file);
-            reader.readLine();
-            reader.readLine();
-            reader.readLine();
-            String body = reader.readLine();
             System.out.println("Body: " + body);
   
             writer.write(body);
