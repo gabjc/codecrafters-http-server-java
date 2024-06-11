@@ -103,8 +103,7 @@ public class Main {
           } 
           // READING THE USER-AGENT HEADER
           else if (reqTarget.startsWith("/user-agent")) {
-
-            String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d \r\n\r\n %s", headers.get("User-Agent").length(), headers.get("User-Agent"));
+            String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " +  headers.get("User-Agent").length() + "\r\n\r\n" + headers.get("User-Agent"));
             output.write(str.getBytes());
           } 
           // RETURNING A FILE
