@@ -142,10 +142,6 @@ public class Main {
           } else {
             output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
           }
-
-            output.flush();
-            output.close();
-
         }
     }
 
