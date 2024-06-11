@@ -74,9 +74,9 @@ public class Main {
         String reqTarget = HttpRequest[1];
         String httpVer = HttpRequest[2];
 
-        // System.out.println("FIRST: " + httpMethod);
-        // System.out.println("SECOND: " + reqTarget);
-        // System.out.println("THIRD: " + httpVer);
+        System.out.println("FIRST: " + httpMethod);
+        System.out.println("SECOND: " + reqTarget);
+        System.out.println("THIRD: " + httpVer);
 
         // Read the body of the request
         StringBuilder bodyBuilder = new StringBuilder();
