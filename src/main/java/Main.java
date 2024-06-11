@@ -105,10 +105,10 @@ public class Main {
           File file = new File(directory + fileName);
           if (file.createNewFile()) {
             // Read the body of the request
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input));
             StringBuilder bodyBuffer = new StringBuilder();
-            while (bufferedReader.ready()) {
-              bodyBuffer.append((char)bufferedReader.read());
+            while (reader.ready()) {
+              bodyBuffer.append((char)reader.read());
+              System.out.println(bodyBuffer.toString());
             }
             String body = bodyBuffer.toString();
 
