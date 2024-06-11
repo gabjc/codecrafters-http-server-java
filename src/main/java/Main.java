@@ -108,7 +108,7 @@ public class Main {
             // Get the User-Agent header
             // String userAgent = reader.readLine();
             // String body = userAgent.substring(12);
-            String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", headers.get("User-Agent").length(), headers.get(("User-Agent")));
+            String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + headers.get("User-Agent").length() + "\r\n\r\n" + headers.get("User-Agent"));
             output.write(str.getBytes());
           } 
           // RETURNING A FILE
