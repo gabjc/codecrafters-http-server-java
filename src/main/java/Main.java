@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
   public static void main(String[] args) {
@@ -41,55 +43,75 @@ public class Main {
         InputStream input = clientSocket.getInputStream();
         // Reads text from character input stream
         BufferedReader reader = new BufferedReader(new InputStreamReader(input)); 
+        Map<String, String> headers = new HashMap<String, String>();
+
+        //Read the request line
         String line = reader.readLine();
+
+        String header = "";
+        //Read the headers of the request
+        while ((header = reader.readLine()) != null && !header.equals("") && !header.isEmpty()) {
+          String[] headerVal = header.split(":", 2);
+          if (headerVal.length == 2) {
+            headers.put(headerVal[0], headerVal[1].trim());
+          }
+        }
 
         //Testing line output
         System.out.println(line);
-
         // Splitting the line based on spaces
-        String[] HttpRequest = line.split(" ", 0);
+        String[] HttpRequest = line.split(" ", 3);
+        String httpMethod = HttpRequest[0];
+        String reqTarget = HttpRequest[1];
+        String httpVer = HttpRequest[2];
 
-        System.out.println("FIRST: " + HttpRequest[0]);
+        System.out.println("FIRST: " + httpMethod);
+        System.out.println("SECOND: " + reqTarget);
+        System.out.println("THIRD: " + httpVer);
 
-        // Testing HttpRequest outputs
-        for (String arr : HttpRequest) {
-          System.out.println(arr);
+        // Read the body of the request
+        StringBuilder bodyBuilder = new StringBuilder();
+        while (reader.ready()) {
+          bodyBuilder.append((char)reader.read());
+          // System.out.println(bodyBuilder.toString());
         }
+        String body = bodyBuilder.toString();
+        System.out.println("Body: " + body);
 
         // Initialized for the write function
         OutputStream output = clientSocket.getOutputStream();
 
-        if (HttpRequest[0].equals("GET")) {
-          if (HttpRequest[1].equals("/")) {
+        if (httpMethod.equals("GET")) {
+          if (reqTarget.equals("/")) {
             output.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
           } 
           // IMPLEMENTING ENDPOINT AND RESPONDING WITH STRING
-          else if (HttpRequest[1].startsWith("/echo/")) {
+          else if (reqTarget.startsWith("/echo/")) {
             // Get the rest of the string after "/echo/"
-            String message = HttpRequest[1].substring(6);
+            String message = reqTarget.substring(6);
             String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", message.length(), message);
             output.write(str.getBytes());
           } 
           // READING THE USER-AGENT HEADER
-          else if (HttpRequest[1].startsWith("/user-agent")) {
+          else if (reqTarget.startsWith("/user-agent")) {
             // Skip the Host header
             reader.readLine();
             // Get the User-Agent header
-            String userAgent = reader.readLine();
-            String body = userAgent.substring(12);
-            String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", body.length(), body);
+            // String userAgent = reader.readLine();
+            // String body = userAgent.substring(12);
+            String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", headers.get("User-Agent").length(), headers.get(("User-Agent")));
             output.write(str.getBytes());
           } 
           // RETURNING A FILE
-          else if (HttpRequest[1].startsWith("/files")) {
+          else if (reqTarget.startsWith("/files")) {
             // Get the file and read from the file
-            String fileName = HttpRequest[1].substring(7);
+            String fileName = reqTarget.substring(7);
             File file = new File(directory, fileName);
             
             // If it exists, read from it
             if (file.exists()){
-              String body = Files.readString(file.toPath());
-              String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: %d\r\n\r\n%s", body.length(), body);
+              String fileBody = Files.readString(file.toPath());
+              String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: %d\r\n\r\n%s", fileBody.length(), fileBody);
               output.write(str.getBytes());
             } else {
                 output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
@@ -99,28 +121,21 @@ public class Main {
             output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
           }
 
-        } else if (HttpRequest[0].equals("POST")) {
+        } else if (httpMethod.equals("POST")) {
           // POST A FILE
-          String fileName = HttpRequest[1].substring(7);
+          String fileName = reqTarget.substring(7);
           File file = new File(directory + fileName);
-          if (file.createNewFile()) {
-            // Read the body of the request
-            StringBuilder bodyBuffer = new StringBuilder();
-            while (reader.ready()) {
-              bodyBuffer.append((char)reader.read());
-              // System.out.println(bodyBuffer.toString());
-            }
-            String body = bodyBuffer.toString();
-
+          if (file.createNewFile()) {            
             FileWriter writer = new FileWriter(file);
-            System.out.println("Body: " + body);
-  
             writer.write(body);
             writer.close();
             output.write("HTTP/1.1 201 Created\r\n\r\n".getBytes());
           } else {
             output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
           }
+
+          output.flush();
+          output.close();
 
         }
     }
