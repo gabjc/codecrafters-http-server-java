@@ -24,7 +24,7 @@ public class Main {
       directory = args[1];
     }
     
-    System.out.println("Directory: " + directory);
+    // System.out.println("Directory: " + directory);
     
     ServerSocket serverSocket = null;
     Socket clientSocket = null;
@@ -57,17 +57,26 @@ public class Main {
           }
         }
 
+          // Iterating HashMap through for loop
+          for (Map.Entry<String, String> set :
+          headers.entrySet()) {
+
+          // Printing all elements of a Map
+          System.out.println(set.getKey() + " = "
+                            + set.getValue());
+        }
+
         //Testing line output
-        System.out.println(line);
+        // System.out.println(line);
         // Splitting the line based on spaces
         String[] HttpRequest = line.split(" ", 3);
         String httpMethod = HttpRequest[0];
         String reqTarget = HttpRequest[1];
         String httpVer = HttpRequest[2];
 
-        System.out.println("FIRST: " + httpMethod);
-        System.out.println("SECOND: " + reqTarget);
-        System.out.println("THIRD: " + httpVer);
+        // System.out.println("FIRST: " + httpMethod);
+        // System.out.println("SECOND: " + reqTarget);
+        // System.out.println("THIRD: " + httpVer);
 
         // Read the body of the request
         StringBuilder bodyBuilder = new StringBuilder();
@@ -76,7 +85,7 @@ public class Main {
           // System.out.println(bodyBuilder.toString());
         }
         String body = bodyBuilder.toString();
-        System.out.println("Body: " + body);
+        // System.out.println("Body: " + body);
 
         // Initialized for the write function
         OutputStream output = clientSocket.getOutputStream();
@@ -134,8 +143,8 @@ public class Main {
             output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
           }
 
-          output.flush();
-          output.close();
+            output.flush();
+            output.close();
 
         }
     }
