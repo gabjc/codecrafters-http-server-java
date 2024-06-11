@@ -108,7 +108,7 @@ public class Main {
             StringBuilder bodyBuffer = new StringBuilder();
             while (reader.ready()) {
               bodyBuffer.append((char)reader.read());
-              System.out.println(bodyBuffer.toString());
+              // System.out.println(bodyBuffer.toString());
             }
             String body = bodyBuffer.toString();
 
