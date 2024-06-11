@@ -106,9 +106,9 @@ public class Main {
             // Skip the Host header
             reader.readLine();
             // Get the User-Agent header
-            // String userAgent = reader.readLine();
-            // String body = userAgent.substring(12);
-            String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + headers.get("User-Agent").length() + "\r\n\r\n" + headers.get("User-Agent"));
+            String userAgent = reader.readLine();
+            String bodyAgent = userAgent.substring(12);
+            String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d \r\n\r\n %s", bodyAgent.length(), bodyAgent);
             output.write(str.getBytes());
           } 
           // RETURNING A FILE
