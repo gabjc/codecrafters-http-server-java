@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
@@ -81,15 +82,6 @@ public class Main {
         // System.out.println("SECOND: " + reqTarget);
         // System.out.println("THIRD: " + httpVer);
 
-        // Read the body of the request
-        StringBuilder bodyBuilder = new StringBuilder();
-        while (reader.ready()) {
-          bodyBuilder.append((char)reader.read());
-          // System.out.println(bodyBuilder.toString());
-        }
-        String body = bodyBuilder.toString();
-        // System.out.println("Body: " + body);
-
         // Initialized for the write function
         OutputStream output = clientSocket.getOutputStream();
 
@@ -114,7 +106,7 @@ public class Main {
               System.out.println(gzipData);
 
               str = "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Type: text/plain\r\nContent-Length: " + gzipData.length + "\r\n\r\n";
-              output.write(str.getBytes("UTF-8"));
+              output.write(str.getBytes(StandardCharsets.UTF_8));
               output.write(gzipData);
 
             }
@@ -150,6 +142,16 @@ public class Main {
           }
 
         } else if (httpMethod.equals("POST")) {
+
+          // Read the body of the request
+          StringBuilder bodyBuilder = new StringBuilder();
+          while (reader.ready()) {
+            bodyBuilder.append((char)reader.read());
+            // System.out.println(bodyBuilder.toString());
+          }
+          String body = bodyBuilder.toString();
+          // System.out.println("Body: " + body);
+
           // POST A FILE
           String fileName = reqTarget.substring(7);
           File file = new File(directory + fileName);
