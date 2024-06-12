@@ -74,9 +74,9 @@ public class Main {
         String reqTarget = HttpRequest[1];
         String httpVer = HttpRequest[2];
 
-        System.out.println("FIRST: " + httpMethod);
-        System.out.println("SECOND: " + reqTarget);
-        System.out.println("THIRD: " + httpVer);
+        // System.out.println("FIRST: " + httpMethod);
+        // System.out.println("SECOND: " + reqTarget);
+        // System.out.println("THIRD: " + httpVer);
 
         // Read the body of the request
         StringBuilder bodyBuilder = new StringBuilder();
@@ -97,8 +97,16 @@ public class Main {
           // IMPLEMENTING ENDPOINT AND RESPONDING WITH STRING
           else if (reqTarget.startsWith("/echo/")) {
             // Get the rest of the string after "/echo/"
-            String message = reqTarget.substring(6);
-            String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", message.length(), message);
+            String str = "";
+            if (headers.containsKey("Accept-Encoding") && headers.get("Accept-Encoding").contains("gzip")) {
+              String message = reqTarget.substring(6);
+              str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\nContent-Encoding: gzip\r\n\r\n%s", message.length(), message);
+            }
+            else {
+              String message = reqTarget.substring(6);
+              str = String.format("HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", message.length(), message);
+            }
+
             output.write(str.getBytes());
           } 
           // READING THE USER-AGENT HEADER
