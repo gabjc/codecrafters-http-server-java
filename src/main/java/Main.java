@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -103,7 +104,7 @@ public class Main {
               gzipOS.write(message.getBytes("UTF-8"));
               byte[] gzipData = byteArrayOS.toByteArray();
 
-              System.out.println(gzipData);
+              System.out.println(Arrays.toString(gzipData));
 
               str = "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Type: text/plain\r\nContent-Length: " + gzipData.length + "\r\n\r\n";
               output.write(str.getBytes(StandardCharsets.UTF_8));
