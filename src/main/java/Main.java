@@ -88,7 +88,7 @@ public class Main {
           // System.out.println(bodyBuilder.toString());
         }
         String body = bodyBuilder.toString();
-        System.out.println("Body: " + body);
+        // System.out.println("Body: " + body);
 
         // Initialized for the write function
         OutputStream output = clientSocket.getOutputStream();
@@ -103,10 +103,15 @@ public class Main {
             String str = "";
             if (headers.containsKey("Accept-Encoding") && headers.get("Accept-Encoding").contains("gzip")) {
               String message = reqTarget.substring(6);
+
+              System.out.println(message);
+
               ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
               GZIPOutputStream gzipOS = new GZIPOutputStream(byteArrayOS);
               gzipOS.write(message.getBytes("UTF-8"));
               byte[] gzipData = byteArrayOS.toByteArray();
+
+              System.out.println(gzipData);
 
               str = "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Type: text/plain\r\nContent-Length: " + gzipData.length + "\r\n\r\n";
               output.write(str.getBytes("UTF-8"));
