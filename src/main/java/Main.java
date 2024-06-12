@@ -100,11 +100,11 @@ public class Main {
             String str = "";
             if (headers.containsKey("Accept-Encoding") && headers.get("Accept-Encoding").contains("gzip")) {
               String message = reqTarget.substring(6);
-              str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\nContent-Encoding: gzip\r\n\r\n%s", message.length(), message);
+              str = String.format("HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", message.length(), message);
             }
             else {
               String message = reqTarget.substring(6);
-              str = String.format("HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", message.length(), message);
+              str = String.format("HTTP/1.1 200 OK\r\n\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", message.length(), message);
             }
 
             output.write(str.getBytes());
