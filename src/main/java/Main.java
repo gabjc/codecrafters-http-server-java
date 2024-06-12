@@ -10,7 +10,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -63,13 +62,13 @@ public class Main {
         }
 
           // Iterating HashMap through for loop
-          for (Map.Entry<String, String> set :
-          headers.entrySet()) {
+          // for (Map.Entry<String, String> set :
+          // headers.entrySet()) {
 
-          // Printing all elements of a Map
-          System.out.println(set.getKey() + " = "
-                            + set.getValue());
-        }
+          // // Printing all elements of a Map
+          // System.out.println(set.getKey() + " = "
+          //                   + set.getValue());
+          // }
 
         //Testing line output
         // System.out.println(line);
@@ -179,8 +178,6 @@ public class Main {
     }
     byte[] gzipData = byteArrayOS.toByteArray();
   
-    System.out.println(Arrays.toString(gzipData));
-
     return gzipData;
   }
 }
