@@ -7,9 +7,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.GZIPOutputStream;
+
 
 public class Main {
   public static void main(String[] args) {
@@ -85,7 +86,7 @@ public class Main {
           // System.out.println(bodyBuilder.toString());
         }
         String body = bodyBuilder.toString();
-        // System.out.println("Body: " + body);
+        System.out.println("Body: " + body);
 
         // Initialized for the write function
         OutputStream output = clientSocket.getOutputStream();
@@ -99,16 +100,24 @@ public class Main {
             // Get the rest of the string after "/echo/"
             String str = "";
             if (headers.containsKey("Accept-Encoding") && headers.get("Accept-Encoding").contains("gzip")) {
-              String message = reqTarget.substring(6);
-              str = String.format("HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", message.length(), message);       
+              // String message = reqTarget.substring(6);
+          
+                GZIPOutputStream gzipOS = new GZIPOutputStream(output);
+                byte[] gzipData = new byte[1024];
+                int length;
+                while((length=input.read(gzipData)) != -1){
+                  gzipOS.write(gzipData, 0, length);
+                }
+                gzipOS.close();
+                
+              str = "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Type: text/plain\r\nContent-Length: " + gzipData.length + "\r\n\r\n" +  gzipData;       
             }
             else {
-              String message = reqTarget.substring(6);
-              str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", message.length(), message);
+              // String message = reqTarget.substring(6);
+              str = String.format("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", body.length(), body);
 
             }
             
-
             output.write(str.getBytes());
           } 
           // READING THE USER-AGENT HEADER
@@ -124,8 +133,8 @@ public class Main {
             
             // If it exists, read from it
             if (file.exists()){
-              String fileBody = Files.readString(file.toPath());
-              String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: %d\r\n\r\n%s", fileBody.length(), fileBody);
+              // String fileBo  dy = Files.readString(file.toPath());
+              String str = String.format("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: %d\r\n\r\n%s", body.length(), body);
               output.write(str.getBytes());
             } else {
                 output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
@@ -159,5 +168,4 @@ public class Main {
     }    
   }
 }
-
-
+  
