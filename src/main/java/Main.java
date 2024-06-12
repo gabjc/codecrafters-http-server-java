@@ -99,12 +99,7 @@ public class Main {
 
               System.out.println(message);
 
-              ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
-              GZIPOutputStream gzipOS = new GZIPOutputStream(byteArrayOS);
-              gzipOS.write(message.getBytes("UTF-8"));
-              byte[] gzipData = byteArrayOS.toByteArray();
-
-              System.out.println(Arrays.toString(gzipData));
+              byte[] gzipData = encode(message);
 
               str = "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Type: text/plain\r\nContent-Length: " + gzipData.length + "\r\n\r\n";
               output.write(str.getBytes(StandardCharsets.UTF_8));
@@ -175,5 +170,19 @@ public class Main {
       System.out.println("IOException: " + e.getMessage());
     }    
   }
-}
+  public static byte[] encode(String message) throws IOException {
   
+    ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
+    try (GZIPOutputStream gzipOS = new GZIPOutputStream(byteArrayOS)) {
+      gzipOS.write(message.getBytes());
+      gzipOS.finish();
+    }
+    byte[] gzipData = byteArrayOS.toByteArray();
+  
+    System.out.println(Arrays.toString(gzipData));
+
+    return gzipData;
+  }
+}
+
+
